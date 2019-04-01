@@ -13,7 +13,7 @@ namespace Ksu.Cis300.PriorityQueueLibrary
     /// An immutable generic binary tree node that can draw itself.
     /// </summary>
     /// <typeparam name="T">The type of the elements stored in the tree.</typeparam>
-    public partial class BinaryTreeNode<T> : ITree
+    public partial class LeftistTree<T> : ITree
     {
         /// <summary>
         /// Gets the data stored in this node.
@@ -23,12 +23,12 @@ namespace Ksu.Cis300.PriorityQueueLibrary
         /// <summary>
         /// Gets this node's left child.
         /// </summary>
-        public BinaryTreeNode<T> LeftChild { get; }
+        public LeftistTree<T> LeftChild { get; }
 
         /// <summary>
         /// Gets this node's right child.
         /// </summary>
-        public BinaryTreeNode<T> RightChild { get; }
+        public LeftistTree<T> RightChild { get; }
 
         /// <summary>
         /// Constructs a BinaryTreeNode with the given data, left child, and right child.
@@ -36,11 +36,45 @@ namespace Ksu.Cis300.PriorityQueueLibrary
         /// <param name="data">The data stored in the node.</param>
         /// <param name="left">The left child.</param>
         /// <param name="right">The right child.</param>
-        public BinaryTreeNode(T data, BinaryTreeNode<T> left, BinaryTreeNode<T> right)
+        public LeftistTree(T data, LeftistTree<T> left, LeftistTree<T> right)
         {
             Data = data;
-            LeftChild = left;
-            RightChild = right;
+            int llength = NullPathLength(left);
+            int rlength = NullPathLength(right);
+
+            if (llength < rlength)
+            {
+                RightChild = left;
+                LeftChild = right;
+            }
+
+            else
+            {
+                LeftChild = left;
+                RightChild = right;
+            }
+
+            _nullPathLength = 1 + NullPathLength(RightChild);
         }
+
+
+        /// <summary>
+        /// stores the null path length
+        /// </summary>
+        private int _nullPathLength = 0;
+
+        public static int NullPathLength(LeftistTree<T> t)
+        {
+            if (t == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return t._nullPathLength;
+            }
+        }
+
+        
     }
 }
